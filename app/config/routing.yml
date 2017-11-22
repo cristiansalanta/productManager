@@ -1,0 +1,56 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+### Operating with the Products
+get_productJson:
+    path: product/get/allproductsjson/{id}
+    defaults: { _controller: AppBundle:Product:showProductJson }
+    methods: GET
+
+get_allProductsJson:
+    path: product/get/allproductsjson
+    defaults: { _controller: AppBundle:Product:showAllProductsJson }
+    methods: GET
+
+get_allProductsSortedJson:
+    path: product/get/allproductssortedjson
+    defaults: { _controller: AppBundle:Product:showAllProductsSortedJson }
+    methods: GET
+
+get_allProductsFilteredJson:
+    path: product/get/allproductsfilteredjson
+    defaults: { _controller: AppBundle:Product:getAllProductsFilteredJson }
+    methods: GET
+
+create_productJson:
+    path: product/post/createproductjson
+    defaults: { _controller: AppBundle:Product:createProductJson }
+    methods: POST
+
+edit_productJson:
+    path: product/post/editproductjson
+    defaults: { _controller: AppBundle:Product:editProductJson }
+    methods: POST
+
+delete_product:
+    path: product/post/deleteproductjson
+    defaults: { _controller: AppBundle:Product:deleteProductJson }
+    methods: POST
+
+## Show All Discounted Products
+get_allProductsDiscountedJson:
+    path: product/get/allproductsdiscountedjson
+    defaults: { _controller: AppBundle:Product:showAllProductsDiscountedJson }
+    methods: GET
+
+### The String Processor ###
+process_string:
+    path: string/process/{theString}
+    defaults: { _controller: AppBundle:Default:processString }
+
+### GUZZLE ###
+guzzle:
+    path: guzzletest
+    defaults: { _controller: AppBundle:Guzzle:createClient }
+

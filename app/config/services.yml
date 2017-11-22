@@ -1,0 +1,48 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+    promotion_ammount: 10
+
+    # STRINGURI
+    #daca stringul contine X amandoua sa se puna la inceput prefixul
+    prefix_X: 404
+    #daca stringul contine 'a' pe pozitia 5 sa se puna la sfarsit sufixul
+    sufix_A: 1337
+
+    #FILTERED PRODUCTS
+    comparing_value: 3000
+    letter_to_check: 'a'
+    number_of_letters: 5
+
+services:
+
+    product_manager:
+        class: AppBundle\ProductManagerService
+        calls:
+            - [ setPromotionManager, ['@promotion_manager']] #Exemple injection
+            - [ setProductCrud, ['@product_crud']]
+            - [ setProductMongoCrud, ['@product_mongo_crud' ]]
+            - [ setProductFiltering, ['@product_filtering']]
+
+    promotion_manager:
+        class: AppBundle\PromotionManagerService
+        arguments: ['%promotion_ammount%']
+
+    product_crud:
+        class: AppBundle\ProductCrudService
+        calls:
+            - [ setDbConnection, ['@database_connection']]
+
+    product_mongo_crud:
+        class: AppBundle\ProductMongoCrudService
+        calls:
+            - [ setSerializer, ['@serializer']]
+
+    string_processing:
+        class: AppBundle\StringProcessingService
+        arguments: ['%prefix_X%','%sufix_A%']
+
+    product_filtering:
+        class: AppBundle\ProductFilteringService
+        arguments: ['%comparing_value%', '%number_of_letters%','%letter_to_check%', '@logger']
+
