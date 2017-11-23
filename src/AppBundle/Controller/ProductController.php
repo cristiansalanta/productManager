@@ -135,7 +135,7 @@ class ProductController extends Controller
         $serializer = $this->container->get('serializer');
         $serialized = $serializer->serialize($allFilteredProductsArrays, 'json');
 
-        $response = new Response($serialized);
+        $response = new Response($serialized.'asdf');
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
