@@ -23,10 +23,11 @@ services:
             - [ setProductCrud, ['@product_crud']]
             - [ setProductMongoCrud, ['@product_mongo_crud' ]]
             - [ setProductFiltering, ['@product_filtering']]
+            - [ setDispatcher, ['@event_dispatcher']]
 
     promotion_manager:
         class: AppBundle\PromotionManagerService
-        arguments: ['%promotion_ammount%']
+        arguments: ['%promotion_ammount%', '@event_dispatcher']
 
     product_crud:
         class: AppBundle\ProductCrudService
@@ -45,4 +46,17 @@ services:
     product_filtering:
         class: AppBundle\ProductFilteringService
         arguments: ['%comparing_value%', '%number_of_letters%','%letter_to_check%', '@logger']
+        calls:
+              - [ setDispatcher, ['@event_dispatcher']]
+
+    kernel.listener.event_listener:
+        class: AppBundle\Events\EventListener
+        calls:
+              - [ setLogger, ['@logger']]
+        tags:
+              - { name: kernel.event_listener, event: something, method: onSomethingHappened }
+              - { name: kernel.event_listener, event: checkSmallerThan, method: onCheckSmallerThan }
+              - { name: kernel.event_listener, event: checkCharacterExistsInName, method: onCheckCharacterExistsInName }
+              - { name: kernel.event_listener, event: checkLenghtOfName, method: onCheckLenghtOfName }
+
 

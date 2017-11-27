@@ -14,28 +14,28 @@ class Product
      * @Serializer\Type("double")
      * @Serializer\SerializedName("id")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      * @Serializer\SerializedName("name")
      * @Serializer\Type("string")
      */
-    private $name;
+    protected $name;
 
     /**
      * @var float
      * @Serializer\Type("float")
      * @Serializer\SerializedName("value")
      */
-    private $value;
+    protected $value;
 
     /**
      * @var float
      * @Serializer\Type("float")
      * @Serializer\SerializedName("discountedValue")
      */
-    private $discountedValue;
+    protected $discountedValue;
 
     /**
      * Set id
