@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Product;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\ProductsEvent;
 
 class ProductController extends Controller
 {
@@ -30,6 +31,13 @@ class ProductController extends Controller
     {
         $pm = $this->container->get('product_manager');
         $allProducts = $pm->getAllProductsDB();
+
+        // AICI FOLOSESC EVENTUL ( am facut un copil la event ca sa pot baga arrayu de produse si sa il trimit mai departe
+        $event = new ProductsEvent();
+        $event->setEventProducts($allProducts);
+
+        $dispatcher = $this->get('event_dispatcher');
+        $dispatcher->dispatch('something', $event);
 
         $serializer = $this->container->get('serializer');
         $serialized = $serializer->serialize($allProducts, 'json');

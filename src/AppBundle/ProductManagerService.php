@@ -11,10 +11,10 @@ namespace AppBundle;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\FilteredProducts;
 use AppBundle\Entity\CountedFilteredProducts;
+use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 
 class ProductManagerService
 {
-
     /**
      * @var PromotionManagerService
      */
@@ -34,6 +34,20 @@ class ProductManagerService
      * @var ProductFilteringService
      */
     protected $productFiltering;
+
+    /**
+     * @var TraceableEventDispatcher
+     */
+    protected $dispatcher;
+
+    /**
+     * @param TraceableEventDispatcher $dispatcher
+     * @return TraceableEventDispatcher
+     */
+    public function setDispatcher(TraceableEventDispatcher $dispatcher)
+    {
+        return $this->dispatcher = $dispatcher;
+    }
 
     /**
      * @param ProductCrudService $productCrud
@@ -185,7 +199,6 @@ class ProductManagerService
             } else {
                 $statementSuccess = 0;
             }
-
 
             // Sa treaca de toate filtrele:
             if ($statementSuccess == 1) {

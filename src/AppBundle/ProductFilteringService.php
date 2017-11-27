@@ -9,7 +9,10 @@
 namespace AppBundle;
 
 use AppBundle\Entity\Product;
+use AppBundle\Entity\ProductFilterIntEvent;
+use AppBundle\Entity\ProductFilterStringEvent;
 use Monolog\Logger;
+use Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher;
 
 class ProductFilteringService
 {
@@ -34,6 +37,20 @@ class ProductFilteringService
     protected $logger;
 
     /**
+     * @var TraceableEventDispatcher
+     */
+    protected $dispatcher;
+
+    /**
+     * @param TraceableEventDispatcher $dispatcher
+     * @return TraceableEventDispatcher
+     */
+    public function setDispatcher(TraceableEventDispatcher $dispatcher)
+    {
+        return $this->dispatcher = $dispatcher;
+    }
+
+    /**
      * ProductFilteringService constructor.
      * @param int $comparingValue
      * @param int $numberOfLetters
@@ -55,17 +72,13 @@ class ProductFilteringService
     public function checkSmallerThanComparingValue(Product $product)
     {
         if ($product->getValue() > $this->comparingValue) {
-            $this->logger->info(
-                sprintf(
-                    'The product with the ID(%u) has its value(%f) lower than what was asked: %f',
-                    $product->getId(),
-                    $product->getValue(),
-                    $this->comparingValue
-                )
-            );
 
             return true;
         }
+        $filterEvent = new ProductFilterIntEvent();
+        $filterEvent->setProduct($product);
+        $filterEvent->setFilterInt($this->comparingValue);
+        $this->dispatcher->dispatch('checkSmallerThan', $filterEvent);
 
         return false;
     }
@@ -77,17 +90,13 @@ class ProductFilteringService
     public function checkCharacterExistsInName(Product $product)
     {
         if (strpos($product->getName(), $this->letterToCheck) == true) {
-            $this->logger->info(
-                sprintf(
-                    'The product with the ID(%u) has in its name(\'%s\') the letter(s): \'%s\'',
-                    $product->getId(),
-                    $product->getName(),
-                    $this->letterToCheck
-                )
-            );
 
             return true;
         }
+        $filterEvent = new ProductFilterStringEvent();
+        $filterEvent->setProduct($product);
+        $filterEvent->setFilterString($this->letterToCheck);
+        $this->dispatcher->dispatch('checkCharacterExistsInName', $filterEvent);
 
         return false;
     }
@@ -99,17 +108,13 @@ class ProductFilteringService
     public function checkLengthOfName(Product $product)
     {
         if (strlen($product->getName()) > $this->numberOfLetters) {
-            $this->logger->info(
-                sprintf(
-                    'The product with the ID(%u) has in its name(\'%s\') more than: %u letters',
-                    $product->getId(),
-                    $product->getName(),
-                    $this->numberOfLetters
-                )
-            );
 
             return true;
         }
+        $filterEvent = new ProductFilterIntEvent();
+        $filterEvent->setProduct($product);
+        $filterEvent->setFilterInt($this->numberOfLetters);
+        $this->dispatcher->dispatch('checkLenghtOfName', $filterEvent);
 
         return false;
     }
