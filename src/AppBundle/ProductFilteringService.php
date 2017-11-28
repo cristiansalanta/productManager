@@ -117,5 +117,6 @@ class ProductFilteringService
         $this->dispatcher->dispatch('checkLenghtOfName', $filterEvent);
 
         return false;
+
     }
 }
